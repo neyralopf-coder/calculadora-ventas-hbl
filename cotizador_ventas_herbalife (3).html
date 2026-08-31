@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cotizador de Ventas | Herbalife Perú</title>
+<style>
+:root{--green:#14865a;--green2:#0d6745;--bg:#f4f7f5;--card:#fff;--text:#173128;--muted:#718078;--line:#dce7e1;--soft:#eaf5f0;--danger:#b83b3b;--shadow:0 10px 30px rgba(18,58,43,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)} 
+header{background:linear-gradient(135deg,var(--green2),var(--green));color:#fff;padding:24px 18px} 
+.header{max-width:1180px;margin:auto} .eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.8} 
+h1{margin:6px 0 4px;font-size:30px} .sub{font-size:14px;opacity:.9}
+main{max-width:1180px;margin:18px auto;padding:0 16px} .layout{display:grid;grid-template-columns:1.4fr .9fr;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+.controls{display:grid;grid-template-columns:1fr 220px;gap:12px} label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px}
+input,select{width:100%;height:44px;border:1px solid var(--line);border-radius:12px;padding:0 12px;font-size:14px;outline:none;background:#fff} input:focus,select:focus{border-color:var(--green)}
+.products{margin-top:12px} .product{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.name{font-weight:800;font-size:14px} .meta{font-size:12px;color:var(--muted);margin-top:4px} .price{color:var(--green2);font-weight:900;margin-top:6px}
+button{font-family:inherit} .add-area{display:flex;align-items:center;gap:7px;align-self:center}
+.qty-input{width:68px;height:40px;border:1px solid var(--line);border-radius:10px;padding:0 8px;text-align:center;font-weight:800;font-size:14px}
+.qty-input:focus{outline:none;border-color:var(--green)}
+.add{border:0;background:var(--green);color:#fff;padding:10px 12px;border-radius:11px;font-weight:800;cursor:pointer}
+.add:hover{background:var(--green2)}
+.cart{max-height:440px;overflow:auto;margin-top:8px} .cart-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.cart-top{display:flex;justify-content:space-between;gap:10px} .cart-name{font-size:13px;font-weight:800} .cart-total{font-size:13px;font-weight:900;white-space:nowrap}
+.qty{display:flex;align-items:center;gap:7px;margin-top:8px} .qty button{width:30px;height:30px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:900;cursor:pointer} .qty span{min-width:28px;text-align:center;font-weight:800} .remove{margin-left:auto;border:0;background:none;color:var(--danger);cursor:pointer;font-size:12px}
+.summary{border-top:2px solid var(--line);margin-top:12px;padding-top:10px} .line{display:flex;justify-content:space-between;padding:7px 0;font-size:14px} .total{font-size:23px;font-weight:900;color:var(--green2)} .points{font-size:20px;font-weight:900}
+.pill{background:var(--soft);color:var(--green2);padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900} .cart-title{display:flex;justify-content:space-between;align-items:center}
+.empty{text-align:center;color:var(--muted);padding:30px 8px} .clear{width:100%;height:42px;margin-top:12px;border:1px solid var(--line);background:#fff;border-radius:11px;font-weight:800;cursor:pointer}
+.fixed{display:inline-block;margin-left:5px;font-size:10px;background:#fff1d8;color:#8a5a12;padding:2px 6px;border-radius:999px;font-weight:900}
+.note{font-size:11px;line-height:1.5;color:var(--muted);margin-top:10px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.add-area{flex-direction:column;align-items:stretch}.qty-input{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="header"><div class="eyebrow">Herramienta interna de ventas</div><h1>Cotizador de Ventas</h1><div class="sub">Precios reales en S/ · Soles peruanos · Base vigente desde 22/05/2026</div></div></header>
+<main><div class="layout">
+<section class="card">
+<div class="controls">
+<div><label for="search">Buscar por producto o SKU</label><input id="search" placeholder="Ej. Fórmula 1, 0141, Aloe..." autocomplete="off"></div>
+<div><label for="level">Nivel</label><select id="level"><option value="PVP">P.V.P.</option><option value="25%">25%</option><option value="35%">35%</option><option value="42%">42%</option><option value="50%">50%</option></select></div>
+</div>
+<div id="products" class="products"></div>
+</section>
+<aside class="card">
+<div class="cart-title"><div><div class="eyebrow" style="color:var(--muted)">Venta ficticia</div><h2 style="margin:3px 0;font-size:22px">Pedido</h2></div><div id="count" class="pill">0 unidades</div></div>
+<div id="cart" class="cart"></div>
+<div class="summary">
+<div class="line"><span>Nivel</span><strong id="sLevel">P.V.P.</strong></div>
+<div class="line"><span>Unidades</span><strong id="sUnits">0</strong></div>
+<div class="line"><span>Puntos</span><strong id="sPoints" class="points">0.00 PV</strong></div>
+<div class="line"><span>Total a pagar</span><strong id="sTotal" class="total">S/ 0.00</strong></div>
+<div class="line"><span>Ahorro vs. P.V.P.</span><strong id="sSaving">S/ 0.00</strong></div>
+</div>
+<button id="clear" class="clear">Nueva venta</button>
+<div class="note">El H252 usa precio fijo de S/196.46 y no aplica descuentos por nivel. Los puntos solo se suman cuando existen en la base.</div>
+</aside>
+</div></main>
+<script>
+const PRODUCTS=[{"SKU": "0141", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Vainilla", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "0142", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Chocolate", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "0146", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Cookies and Cream", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "0143", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Fresa", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "187K", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Dulce de Leche", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "1134", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Naranja Crema", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "0884", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Chocoavellana", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "1522", "Categoría": "Batido Nutricional F1", "Producto": "Formula 1 Batido Nutricional - Banana Caramelo", "Puntos": 25.75, "PVP": 187.0, "25%": 145.95, "35%": 129.53, "42%": 118.03, "50%": 104.9}, {"SKU": "395K", "Categoría": "Batido Nutricional F1", "Producto": "Fórmula 1 Nutri Soup sabor pollo con vegetales", "Puntos": 18.25, "PVP": 134.0, "25%": 105.33, "35%": 93.96, "42%": 86.01, "50%": 76.91}, {"SKU": "1638", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Chai 51 gr", "Puntos": 21.45, "PVP": 147.0, "25%": 114.93, "35%": 102.01, "42%": 92.95, "50%": 82.6}, {"SKU": "0105", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Original 51 gr", "Puntos": 21.45, "PVP": 147.0, "25%": 114.93, "35%": 102.01, "42%": 92.95, "50%": 82.6}, {"SKU": "0106", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Original 102 gr", "Puntos": 37.6, "PVP": 256.0, "25%": 199.65, "35%": 177.19, "42%": 161.48, "50%": 143.49}, {"SKU": "0190", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Durazno 102 gr", "Puntos": 37.6, "PVP": 256.0, "25%": 199.65, "35%": 177.19, "42%": 161.48, "50%": 143.49}, {"SKU": "0256", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Frambuesa 51 gr", "Puntos": 21.45, "PVP": 147.0, "25%": 114.93, "35%": 102.01, "42%": 92.95, "50%": 82.6}, {"SKU": "0189", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Frambuesa 102 gr", "Puntos": 37.6, "PVP": 256.0, "25%": 199.65, "35%": 177.19, "42%": 161.48, "50%": 143.49}, {"SKU": "0188", "Categoría": "Té Concentrado de Hierbas", "Producto": "Té Concentrado de Hierbas - Limon 102 gr", "Puntos": 37.6, "PVP": 256.0, "25%": 199.65, "35%": 177.19, "42%": 161.48, "50%": 143.49}, {"SKU": "0006", "Categoría": "Herbal Aloe Concentrado", "Producto": "Herbal Aloe Vera - Original", "Puntos": 26.85, "PVP": 183.0, "25%": 142.97, "35%": 126.9, "42%": 115.63, "50%": 102.77}, {"SKU": "1065", "Categoría": "Herbal Aloe Concentrado", "Producto": "Herbal Aloe Vera - Mango", "Puntos": 26.85, "PVP": 183.0, "25%": 142.97, "35%": 126.9, "42%": 115.63, "50%": 102.77}, {"SKU": "2631", "Categoría": "Herbal Aloe Concentrado", "Producto": "Herbal Aloe Vera - Mandarina", "Puntos": 26.85, "PVP": 183.0, "25%": 142.97, "35%": 126.9, "42%": 115.63, "50%": 102.77}, {"SKU": "1610", "Categoría": "Herbal Aloe Concentrado", "Producto": "Herbal Aloe Vera - Uva", "Puntos": 26.85, "PVP": 183.0, "25%": 142.97, "35%": 126.9, "42%": 115.63, "50%": 102.77}, {"SKU": "0242", "Categoría": "Proteínas", "Producto": "Proteína Personalizada en Polvo Herbalife", "Puntos": 19.3, "PVP": 152.0, "25%": 118.96, "35%": 105.58, "42%": 96.22, "50%": 85.51}, {"SKU": "2648", "Categoría": "Proteínas", "Producto": "Proteína Personalizada en Polvo - Frutos Rojos", "Puntos": 19.3, "PVP": 152.0, "25%": 118.96, "35%": 105.58, "42%": 96.22, "50%": 85.51}, {"SKU": "1122", "Categoría": "Proteínas", "Producto": "Protein Drink Mix - Vainilla", "Puntos": 30.65, "PVP": 238.0, "25%": 187.91, "35%": 167.89, "42%": 153.88, "50%": 137.86}, {"SKU": "1250", "Categoría": "Proteínas", "Producto": "Protein Drink Mix - Crema de Maní", "Puntos": 30.65, "PVP": 238.0, "25%": 187.91, "35%": 167.89, "42%": 153.88, "50%": 137.86}, {"SKU": "1119", "Categoría": "Proteínas", "Producto": "Barra de Proteina Deluxe", "Puntos": 16.2, "PVP": 136.0, "25%": 116.84, "35%": 109.38, "42%": 104.16, "50%": 98.19}, {"SKU": "313K", "Categoría": "Proteínas", "Producto": "Nutri Muffin", "Puntos": 20.5, "PVP": 149.0, "25%": 116.1, "35%": 103.04, "42%": 93.89, "50%": 83.45}, {"SKU": "120K", "Categoría": "Proteínas", "Producto": "Protein Crunch - Chocolate", "Puntos": 26.55, "PVP": 189.0, "25%": 150.16, "35%": 134.69, "42%": 123.86, "50%": 111.48}, {"SKU": "093K", "Categoría": "Proteínas", "Producto": "Beverage Mix sabor a mix de frutas", "Puntos": 23.3, "PVP": 162.0, "25%": 129.98, "35%": 117.36, "42%": 108.53, "50%": 98.43}, {"SKU": "0020", "Categoría": "Complementos", "Producto": "Xtra-Cal Advanced", "Puntos": 11.0, "PVP": 77.0, "25%": 60.31, "35%": 53.52, "42%": 48.77, "50%": 43.34}, {"SKU": "3122", "Categoría": "Complementos", "Producto": "Formula 2 - Complejo Multivitaminico", "Puntos": 10.75, "PVP": 83.0, "25%": 64.64, "35%": 57.36, "42%": 52.28, "50%": 46.45}, {"SKU": "0065", "Categoría": "Complementos", "Producto": "Herbalifeline", "Puntos": 27.7, "PVP": 183.0, "25%": 142.94, "35%": 126.86, "42%": 115.6, "50%": 102.72}, {"SKU": "0267", "Categoría": "Complementos", "Producto": "Beta Heart", "Puntos": 36.55, "PVP": 239.0, "25%": 186.55, "35%": 165.56, "42%": 150.87, "50%": 134.07}, {"SKU": "2864", "Categoría": "Nutrición Específica", "Producto": "Fibra Activa - Sabor Manzana", "Puntos": 24.65, "PVP": 174.0, "25%": 135.67, "35%": 120.41, "42%": 109.73, "50%": 97.51}, {"SKU": "337K", "Categoría": "Nutrición Específica", "Producto": "Fibra Activa - Sabor Guayaba", "Puntos": 24.65, "PVP": 174.0, "25%": 135.67, "35%": 120.41, "42%": 109.73, "50%": 97.51}, {"SKU": "3987", "Categoría": "Nutrición Específica", "Producto": "Collagen Beauty Drink", "Puntos": 28.15, "PVP": 207.0, "25%": 163.43, "35%": 145.89, "42%": 133.6, "50%": 119.55}, {"SKU": "047K", "Categoría": "Nutrición Específica", "Producto": "Immunity essentials", "Puntos": 26.5, "PVP": 181.0, "25%": 141.18, "35%": 125.3, "42%": 114.17, "50%": 101.46}, {"SKU": "3150", "Categoría": "Nutrición Específica", "Producto": "Niteworks 15 Days", "Puntos": 52.4, "PVP": 343.0, "25%": 267.75, "35%": 237.63, "42%": 216.54, "50%": 192.43}, {"SKU": "044K", "Categoría": "Nutrición Específica", "Producto": "Te Rlx Herbalife Infusion", "Puntos": 40.5, "PVP": 260.0, "25%": 203.28, "35%": 180.41, "42%": 164.4, "50%": 146.1}, {"SKU": "101K", "Categoría": "Nutrición Específica", "Producto": "Memory Armour", "Puntos": 30.1, "PVP": 200.0, "25%": 155.86, "35%": 138.32, "42%": 126.04, "50%": 112.02}, {"SKU": "238K", "Categoría": "Nutrición Específica", "Producto": "Golden Beverage", "Puntos": 21.95, "PVP": 159.0, "25%": 124.38, "35%": 110.39, "42%": 100.59, "50%": 89.39}, {"SKU": "0102", "Categoría": "Deportes y Vida Activa", "Producto": "Té N.R.G.", "Puntos": 15.85, "PVP": 113.0, "25%": 88.4, "35%": 78.46, "42%": 71.49, "50%": 63.54}, {"SKU": "075K", "Categoría": "Deportes y Vida Activa", "Producto": "Té N.R.G. Guaraná Tropical", "Puntos": 15.85, "PVP": 113.0, "25%": 88.4, "35%": 78.46, "42%": 71.49, "50%": 63.54}, {"SKU": "1417", "Categoría": "Deportes y Vida Activa", "Producto": "Herbalife 24 Rebuild Strength", "Puntos": 40.35, "PVP": 301.0, "25%": 247.93, "35%": 226.73, "42%": 211.88, "50%": 194.91}, {"SKU": "1478", "Categoría": "Deportes y Vida Activa", "Producto": "Herbalife Drive", "Puntos": 26.75, "PVP": 146.0, "25%": 116.69, "35%": 105.05, "42%": 96.9, "50%": 87.59}, {"SKU": "204K", "Categoría": "Deportes y Vida Activa", "Producto": "LiftOff", "Puntos": 11.4, "PVP": 84.0, "25%": 66.2, "35%": 59.06, "42%": 54.07, "50%": 48.36}, {"SKU": "0766", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN - Limpiador Citrico para la piel - Piel Normal a Grasa", "Puntos": 18.0, "PVP": 128.0, "25%": 100.29, "35%": 89.01, "42%": 81.1, "50%": 72.07}, {"SKU": "0767", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN Tonificador Energizante de Hierbas", "Puntos": 13.65, "PVP": 97.0, "25%": 76.05, "35%": 67.49, "42%": 61.51, "50%": 54.65}, {"SKU": "0768", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN - Serum Reductor de Lineas", "Puntos": 40.55, "PVP": 289.0, "25%": 225.76, "35%": 200.36, "42%": 182.57, "50%": 162.26}, {"SKU": "0773", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN Mascarilla Purificadora de Arcilla con Menta", "Puntos": 15.25, "PVP": 109.0, "25%": 85.05, "35%": 75.48, "42%": 68.79, "50%": 61.13}, {"SKU": "0772", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN - Exfoliante Instantáneo con Arándanos", "Puntos": 14.1, "PVP": 101.0, "25%": 78.45, "35%": 69.63, "42%": 63.45, "50%": 56.39}, {"SKU": "0899", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN - Crema Humectante Protectora de Día FPS 30", "Puntos": 30.55, "PVP": 218.0, "25%": 170.09, "35%": 150.94, "42%": 137.55, "50%": 122.24}, {"SKU": "3294", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN Programa Básico", "Puntos": 62.2, "PVP": 444.0, "25%": 346.42, "35%": 307.45, "42%": 280.16, "50%": 248.97}, {"SKU": "3295", "Categoría": "Herbalife SKIN", "Producto": "Herbalife SKIN Programa Avanzado", "Puntos": 102.75, "PVP": 733.0, "25%": 572.18, "35%": 507.81, "42%": 462.73, "50%": 411.23}, {"SKU": "2562", "Categoría": "Herbal Aloe", "Producto": "Herbal Aloe - Gel refrescante corporal / Soothing Gel", "Puntos": 8.9, "PVP": 66.0, "25%": 51.43, "35%": 45.66, "42%": 41.6, "50%": 36.96}, {"SKU": "2563", "Categoría": "Herbal Aloe", "Producto": "Herbal Aloe - Crema para manos y cuerpo/hand and Body Cream", "Puntos": 8.9, "PVP": 66.0, "25%": 51.43, "35%": 45.66, "42%": 41.6, "50%": 36.96}, {"SKU": "H252", "Categoría": "Registro", "Producto": "Kit de Registro para Distribuidor Independiente", "Puntos": null, "PVP": 196.46, "25%": null, "35%": null, "42%": null, "50%": null}];
+const money=n=>'S/ '+Number(n||0).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
+let level='PVP', cart=new Map();
+const el=id=>document.getElementById(id);
+function price(p){return p.SKU==='H252'?196.46:Number(p[level]||0)}
+function renderProducts(){
+ const q=el('search').value.trim().toLowerCase();
+ const list=PRODUCTS.filter(p=>!q||String(p.SKU).toLowerCase().includes(q)||String(p.Producto).toLowerCase().includes(q)||String(p.Categoría).toLowerCase().includes(q));
+ if(!list.length){el('products').innerHTML='<div class="empty">No encontramos productos.</div>';return}
+ el('products').innerHTML=list.map(p=>`
+ <div class="product"><div><div class="name">${p.Producto} ${p.SKU==='H252'?'<span class="fixed">PRECIO FIJO</span>':''}</div>
+ <div class="meta">SKU ${p.SKU} · ${p.Categoría}${p.Puntos==null?'':' · '+Number(p.Puntos).toFixed(2)+' PV'}</div>
+ <div class="price">${money(price(p))}</div></div>
+ <div class="add-area">
+  <input class="qty-input" id="qty-${p.SKU}" type="number" min="1" step="1" value="1" aria-label="Cantidad">
+  <button class="add" onclick="addWithQty('${p.SKU}')">Agregar</button>
+</div></div>`).join('');
+}
+function add(sku){cart.set(sku,(cart.get(sku)||0)+1);renderCart()}
+function addWithQty(sku){
+ const input=document.getElementById('qty-'+sku);
+ let qty=parseInt(input.value,10);
+ if(!Number.isFinite(qty) || qty<1) qty=1;
+ cart.set(sku,(cart.get(sku)||0)+qty);
+ input.value=1;
+ renderCart();
+}
+function change(sku,d){const n=(cart.get(sku)||0)+d;if(n<=0)cart.delete(sku);else cart.set(sku,n);renderCart()}
+function removeItem(sku){cart.delete(sku);renderCart()}
+function renderCart(){
+ const entries=[...cart.entries()];
+ el('cart').innerHTML=entries.length?entries.map(([sku,qty])=>{const p=PRODUCTS.find(x=>x.SKU===sku);return `
+ <div class="cart-row"><div class="cart-top"><div class="cart-name">${p.Producto}</div><div class="cart-total">${money(price(p)*qty)}</div></div>
+ <div class="qty"><button onclick="change('${sku}',-1)">−</button><span>${qty}</span><button onclick="change('${sku}',1)">+</button><button class="remove" onclick="removeItem('${sku}')">Eliminar</button></div></div>`}).join(''):'<div class="empty">Agrega productos para comenzar.</div>';
+ recalc();
+}
+function recalc(){
+ let total=0,pvp=0,points=0,units=0;
+ for(const [sku,qty] of cart.entries()){const p=PRODUCTS.find(x=>x.SKU===sku);total+=price(p)*qty;pvp+=Number(p.PVP||0)*qty;points+=Number(p.Puntos||0)*qty;units+=qty}
+ el('count').textContent=`${units} ${units===1?'unidad':'unidades'}`;el('sLevel').textContent=level;el('sUnits').textContent=units;
+ el('sPoints').textContent=points.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})+' PV';
+ el('sTotal').textContent=money(total);el('sSaving').textContent=money(Math.max(0,pvp-total));
+}
+el('search').addEventListener('input',renderProducts);
+el('level').addEventListener('change',e=>{level=e.target.value;renderProducts();renderCart()});
+el('clear').addEventListener('click',()=>{cart.clear();renderCart()});
+renderProducts();renderCart();
+</script>
+</body>
+</html>
