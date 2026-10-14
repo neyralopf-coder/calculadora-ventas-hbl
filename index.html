@@ -35,9 +35,9 @@ button{font-family:inherit} .add-area{display:flex;align-items:center;gap:7px;al
   .sub{font-size:13px}
   main{margin:10px auto;padding:0 10px}
   .layout{display:flex;flex-direction:column;gap:10px}
-  .layout > aside.card{order:-1;position:sticky;top:0;z-index:30;padding:12px;border-radius:14px;max-height:42vh;overflow:auto;box-shadow:0 5px 18px rgba(18,58,43,.14)}
+  .layout > aside.card{order:-1;position:relative;top:auto;z-index:1;padding:12px;border-radius:14px;max-height:none;overflow:visible}
   .layout > section.card{order:1;padding:12px;border-radius:14px}
-  .cart{max-height:86px;overflow:auto;margin-top:4px}
+  .cart{max-height:90px;overflow:auto;margin-top:4px}
   .cart-row{padding:6px 0}
   .cart-name,.cart-total{font-size:12px}
   .qty{margin-top:4px}
@@ -46,17 +46,17 @@ button{font-family:inherit} .add-area{display:flex;align-items:center;gap:7px;al
   .line{padding:3px 0;font-size:12px}
   .total{font-size:19px}
   .points{font-size:16px}
-  .clear{height:34px;margin-top:7px}
+  .clear{height:36px;margin-top:7px}
   .note{font-size:10px;margin-top:6px}
   .controls{grid-template-columns:1fr;gap:8px}
   input,select{height:42px}
-  .products{margin-top:6px;max-height:none}
+  .products{display:block;margin-top:6px;max-height:none;overflow:visible}
   .product{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 0}
   .name{font-size:13px;line-height:1.25;overflow-wrap:anywhere}
   .meta{font-size:11px;line-height:1.25}
   .price{font-size:16px;margin-top:4px}
-  .add-area{flex-direction:column;align-items:stretch;gap:5px}
-  .qty-input{width:74px;height:36px}
+  .add-area{flex-direction:row;align-items:center;gap:5px}
+  .qty-input{width:64px;height:36px}
   .add{padding:9px 10px;font-size:12px}
 }
 </style>
