@@ -21,15 +21,44 @@ button{font-family:inherit} .add-area{display:flex;align-items:center;gap:7px;al
 .qty-input:focus{outline:none;border-color:var(--green)}
 .add{border:0;background:var(--green);color:#fff;padding:10px 12px;border-radius:11px;font-weight:800;cursor:pointer}
 .add:hover{background:var(--green2)}
-.cart{max-height:440px;overflow:auto;margin-top:8px}.layout>.card:last-child{position:sticky;top:16px;align-self:start} .cart-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.cart{max-height:440px;overflow:auto;margin-top:8px} .cart-row{padding:12px 0;border-bottom:1px solid var(--line)}
 .cart-top{display:flex;justify-content:space-between;gap:10px} .cart-name{font-size:13px;font-weight:800} .cart-total{font-size:13px;font-weight:900;white-space:nowrap}
 .qty{display:flex;align-items:center;gap:7px;margin-top:8px} .qty button{width:30px;height:30px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:900;cursor:pointer} .qty span{min-width:28px;text-align:center;font-weight:800} .remove{margin-left:auto;border:0;background:none;color:var(--danger);cursor:pointer;font-size:12px}
-.summary{border-top:2px solid var(--line);margin-top:12px;padding-top:10px} .line{display:flex;justify-content:space-between;padding:7px 0;font-size:14px} .total{font-size:23px;font-weight:900;color:var(--green2)}#sTotal{background:var(--soft);padding:6px 10px;border-radius:10px} .points{font-size:20px;font-weight:900}
+.summary{border-top:2px solid var(--line);margin-top:12px;padding-top:10px} .line{display:flex;justify-content:space-between;padding:7px 0;font-size:14px} .total{font-size:23px;font-weight:900;color:var(--green2)} .points{font-size:20px;font-weight:900}
 .pill{background:var(--soft);color:var(--green2);padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900} .cart-title{display:flex;justify-content:space-between;align-items:center}
 .empty{text-align:center;color:var(--muted);padding:30px 8px} .clear{width:100%;height:42px;margin-top:12px;border:1px solid var(--line);background:#fff;border-radius:11px;font-weight:800;cursor:pointer}
 .fixed{display:inline-block;margin-left:5px;font-size:10px;background:#fff1d8;color:#8a5a12;padding:2px 6px;border-radius:999px;font-weight:900}
 .note{font-size:11px;line-height:1.5;color:var(--muted);margin-top:10px}
-@media(max-width:900px){.layout{grid-template-columns:1fr}.layout>.card:last-child{order:-1;position:sticky;top:0;z-index:20}.controls{grid-template-columns:1fr}.products{max-height:none}.add-area{flex-direction:row;align-items:center}.qty-input{width:68px}}
+@media(max-width:900px){
+  header{padding:16px 14px}
+  h1{font-size:25px}
+  .sub{font-size:13px}
+  main{margin:10px auto;padding:0 10px}
+  .layout{display:flex;flex-direction:column;gap:10px}
+  .layout > aside.card{order:-1;position:sticky;top:0;z-index:30;padding:12px;border-radius:14px;max-height:42vh;overflow:auto;box-shadow:0 5px 18px rgba(18,58,43,.14)}
+  .layout > section.card{order:1;padding:12px;border-radius:14px}
+  .cart{max-height:86px;overflow:auto;margin-top:4px}
+  .cart-row{padding:6px 0}
+  .cart-name,.cart-total{font-size:12px}
+  .qty{margin-top:4px}
+  .qty button{width:26px;height:26px}
+  .summary{margin-top:7px;padding-top:5px}
+  .line{padding:3px 0;font-size:12px}
+  .total{font-size:19px}
+  .points{font-size:16px}
+  .clear{height:34px;margin-top:7px}
+  .note{font-size:10px;margin-top:6px}
+  .controls{grid-template-columns:1fr;gap:8px}
+  input,select{height:42px}
+  .products{margin-top:6px;max-height:none}
+  .product{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 0}
+  .name{font-size:13px;line-height:1.25;overflow-wrap:anywhere}
+  .meta{font-size:11px;line-height:1.25}
+  .price{font-size:16px;margin-top:4px}
+  .add-area{flex-direction:column;align-items:stretch;gap:5px}
+  .qty-input{width:74px;height:36px}
+  .add{padding:9px 10px;font-size:12px}
+}
 </style>
 </head>
 <body>
